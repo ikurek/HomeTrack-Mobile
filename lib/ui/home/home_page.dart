@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:home_track/core/core_page.dart';
+import 'package:home_track/ui/current/current_page.dart';
+import 'package:home_track/ui/today/today_page.dart';
 
 import 'home_page_builder.dart';
 import 'home_page_service.dart';
 
 class HomePage extends StatefulWidget implements CorePage<HomePageBuilder> {
-  HomePage({Key key, this.title}) : super(key: key);
-  final String title;
-  final List<Widget> tabs = buildListOfTabs();
+  HomePage({Key key}) : super(key: key);
+  final List<Widget> tabViews = [CurrentPage(), TodayPage(), CurrentPage()];
+  final List<String> tabTitles = ["Home", "Today", "Stats"];
+  final List<Widget> tabButtons = [
+    Tab(icon: Icon(Icons.home)),
+    Tab(icon: Icon(Icons.today)),
+    Tab(icon: Icon(Icons.data_usage))
+  ];
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -17,23 +24,33 @@ class HomePage extends StatefulWidget implements CorePage<HomePageBuilder> {
   get builder => HomePageBuilder();
 }
 
-class _HomePageState extends State<HomePage> {
-  int currentTabSelected = 0;
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  int _currentTabSelected = 0;
+  TabController _tabController;
+
+  @override
+  void initState() {
+    _tabController =
+        TabController(initialIndex: 0, length: widget.tabButtons.length, vsync: this);
+    _tabController.addListener(() => _onTabChanged());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.builder.buildHomePageAppBar(widget.title),
-      body: widget.tabs[currentTabSelected],
-      bottomNavigationBar: widget.builder.buildHomePageBottomNavigationBar(
-          context, currentTabSelected, _onTabSelected),
+      appBar: widget.builder
+          .buildHomePageAppBar(widget.tabTitles[_currentTabSelected]),
+      body: TabBarView(controller: _tabController, children: widget.tabViews),
+      bottomNavigationBar: TabBar(
+          controller: _tabController, tabs: widget.tabButtons),
     );
   }
 
-  void _onTabSelected(int tab) {
+  void _onTabChanged() {
     setState(() {
-      currentTabSelected = tab;
+      _currentTabSelected = _tabController.index;
     });
-    debugPrint('Selected tab: $currentTabSelected');
+    debugPrint('Selected tab: $_currentTabSelected');
   }
 }
