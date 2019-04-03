@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   ThemeData _buildDarkTheme() {
     return ThemeData(
       brightness: Brightness.dark,
-      accentColor: Colors.cyanAccent
+        accentColor: Colors.white
     );
   }
 }

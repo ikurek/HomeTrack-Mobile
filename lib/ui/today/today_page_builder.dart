@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-
 import 'package:home_track/core/core_builder.dart';
 
-class TodayPageBuilder implements CoreBuilder {
-  @override
+class TodayPageBuilder with CoreBuilder {
+
   Widget buildRootLayout(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
