@@ -4,7 +4,6 @@ import 'package:home_track/domain/weather.dart';
 import 'package:intl/intl.dart';
 
 class CurrentPageBuilder with CoreBuilder {
-
   Widget buildRootLayout(BuildContext context, Weather weather, Error error,
       Function refresh) {
     if (error != null)
@@ -18,22 +17,21 @@ class CurrentPageBuilder with CoreBuilder {
   Widget buildWeatherLayout(BuildContext context, Weather weather,
       Function refresh) {
     return RefreshIndicator(
-      onRefresh: refresh,
-      child: SingleChildScrollView(
-        physics: AlwaysScrollableScrollPhysics(),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            _buildEntryTimeCard(weather.dateTime),
-            _buildTemperatureCard(weather.temperature),
-            _buildHumidityCard(weather.humidity),
-            _buildPressureCard(weather.pressure)
-          ],
-        ),
-      ),
-    );
+        onRefresh: refresh,
+        child: ConstrainedBox(
+          constraints: BoxConstraints.expand(),
+          child: SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: Column(
+              children: <Widget>[
+                _buildEntryTimeCard(weather.dateTime),
+                _buildTemperatureCard(weather.temperature),
+                _buildHumidityCard(weather.humidity),
+                _buildPressureCard(weather.pressure),
+              ],
+            ),
+          ),
+        ));
   }
 
   Widget _buildEntryTimeCard(DateTime date) {
